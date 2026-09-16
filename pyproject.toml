@@ -1,0 +1,11 @@
+[tool.pytest.ini_options]
+# Without this, collection depends on where pytest is invoked from: the samples
+# import their neighbours by bare module name, which only works when the test's
+# own directory is on sys.path.
+pythonpath = ["samples/router-agent", "samples/evaluation", "access"]
+testpaths = ["samples", "access"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
