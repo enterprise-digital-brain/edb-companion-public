@@ -1,0 +1,15 @@
+name = "access"
+main = "worker.js"
+compatibility_date = "2026-09-01"
+
+[vars]
+EDB_EDITION = "1"
+BUNDLE_URL  = "https://github.com/enterprise-digital-brain/edb-companion-public/releases/download/extended-v1/edb-extended.zip"
+
+[[kv_namespaces]]
+binding = "LEDGER"
+id = "PUT-YOUR-KV-NAMESPACE-ID-HERE"
+
+# Set as secrets, never as vars:
+#   npx wrangler secret put EDB_SECRET
+#   npx wrangler secret put EDB_CHALLENGE
