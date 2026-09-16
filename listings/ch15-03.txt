@@ -1,0 +1,13 @@
+inference_zone
+provider_id
+model_id
+processing_region
+data_class
+sovereignty_policy_id
+sovereignty_profile_version
+egress_decision
+retention_profile
+telemetry_region
+key_profile
+fallback_reason
+exception_id

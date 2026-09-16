@@ -1,0 +1,16 @@
+feature: architecture_review
+risk_class: medium
+model_profile: reasoning_standard
+context:
+  max_evidence_items: 8
+  max_chars: 24000
+retrieval:
+  sources:
+    - architecture_standards
+    - application_inventory
+agent:
+  max_iterations: 4
+  allowed_tools:
+    - lookup_standard
+    - query_application_graph
+  write_tools: []

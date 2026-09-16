@@ -1,0 +1,32 @@
+sovereignty:
+  profile: restricted-au
+  data_class: restricted
+  permitted_jurisdictions: [AU]
+
+  inference:
+    permitted_zones: [S2, S3]
+    public_managed_api: false
+    approved_model_profiles:
+      - regulated-reasoner-v2
+      - local-reasoner-v4
+
+  memory:
+    residency: AU
+    external_persistence: false
+
+  telemetry:
+    residency: AU
+    raw_prompt_capture: false
+    external_export: false
+
+  keys:
+    customer_managed: true
+    key_profile: hsm-prod-au
+
+  egress:
+    internet: deny
+    approved_destinations: []
+
+  fallback:
+    sovereignty_downgrade: deny
+    human_escalation: true

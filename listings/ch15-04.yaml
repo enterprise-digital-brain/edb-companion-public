@@ -1,0 +1,14 @@
+capability:
+  id: supplier-risk.lookup.v3
+  protocol: mcp
+  sovereignty:
+    max_data_class: confidential
+    processing_jurisdictions: [AU]
+    telemetry_jurisdiction: AU
+    persistent_storage: false
+    internet_egress: false
+    approved_zones: [S1, S2, S3]
+  authority:
+    required_scope: read:supplier-risk
+  evidence:
+    certification_id: cap-cert-2026-0817

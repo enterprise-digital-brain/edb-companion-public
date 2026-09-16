@@ -1,0 +1,19 @@
+feature: architecture_review
+version: 3
+principal_scope:
+  roles: [solution_architect]
+knowledge:
+  domains: [architecture_standards, security_controls, application_inventory]
+  require_provenance: true
+  max_items: 12
+tools:
+  allow: [get_application, search_standards, graph_dependencies]
+workflow_state:
+  expose: [review_id, phase, prior_findings]
+history:
+  strategy: summarised_relevant_only
+output:
+  schema: ArchitectureReviewFindingV2
+limits:
+  max_context_tokens: 18000
+  max_tool_calls: 8
