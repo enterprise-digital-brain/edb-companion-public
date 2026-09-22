@@ -1,0 +1,15 @@
+{
+  "memory_id": "mem-73bd",
+  "type": "episodic",
+  "subject": "supplier:ACME-44",
+  "assertion": "Supplier requested a seven-day delivery extension",
+  "asserted_by": "human:user-19",
+  "evidence_refs": ["email-8891"],
+  "tenant_id": "tenant-a",
+  "purpose": "supply-risk-management",
+  "valid_from": "2026-08-01T00:00:00Z",
+  "expires_at": "2027-08-01T00:00:00Z",
+  "authority": "declared",
+  "sensitivity": "confidential",
+  "write_policy": "MEM-EPISODIC-02"
+}

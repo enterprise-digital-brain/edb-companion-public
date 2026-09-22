@@ -4,14 +4,50 @@ on:
   pull_request:
 permissions:
   contents: read
+
 jobs:
   python:
+    name: tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
         with:
           python-version: "3.13"
-      - run: python -m compileall samples
-      - run: python -m pip install pytest
-      - run: pytest -q
+      - run: python -m compileall -q samples access tools
+      - run: python -m pip install --quiet pytest
+      - run: python -m pytest
+        env:
+          # A throwaway value so the access tests can run. The real secret is a
+          # Worker secret and is never present in CI.
+          EDB_SECRET: ci-only-not-a-real-secret-32-characters
+
+  pointers:
+    name: printed pointers resolve
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      # The book cannot be corrected once printed. If a path it names has gone
+      # missing, this fails before the change reaches main.
+      - run: python tools/check_book_pointers.py
+
+  parity:
+    name: worker and python agree
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+      # Two implementations of one identifier scheme drift silently. This proves
+      # they still agree, so a support answer from the Python side matches what a
+      # reader was actually issued.
+      - run: python tools/check_parity.py
+        env:
+          EDB_SECRET: ci-only-not-a-real-secret-32-characters

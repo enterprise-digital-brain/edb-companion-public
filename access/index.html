@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reader access — The Contextual Agentic Enterprise</title>
+<style>
+  :root{
+    --ink:#161C24; --ink2:#4A5561; --ink3:#7C8792;
+    --rule:#DCE3EA; --paper:#FFFFFF; --shade:#F1F4F8;
+    --auth:#1C5578; --auth-soft:#E2ECF3; --deny:#8A2E38; --deny-soft:#FBEDEE;
+    --evid:#1F6B63; --evid-soft:#E7F1EF;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ink:#E8EDF2; --ink2:#AEB9C4; --ink3:#7C8792;
+      --rule:#2C3540; --paper:#12171D; --shade:#1A212A;
+      --auth:#7FB2D4; --auth-soft:#16252F; --deny:#E08893; --deny-soft:#2A1A1D;
+      --evid:#79C4B9; --evid-soft:#15241F;
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font:16px/1.55 ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  main{max-width:640px;margin:0 auto;padding:48px 16px 96px}
+  h1{font-size:1.5rem;line-height:1.25;margin:0 0 .35em}
+  .sub{color:var(--ink2);margin:0 0 2rem}
+  fieldset{border:1px solid var(--rule);border-radius:10px;padding:20px;margin:0 0 20px}
+  legend{padding:0 8px;font-weight:650;color:var(--auth);font-size:.9rem}
+  label{display:block;font-weight:600;margin:14px 0 6px;font-size:.92rem}
+  .hint{font-weight:400;color:var(--ink3);font-size:.85rem;margin:2px 0 6px}
+  input{width:100%;padding:11px 12px;font:inherit;color:var(--ink);
+    background:var(--shade);border:1px solid var(--rule);border-radius:7px}
+  input:focus{outline:2px solid var(--auth);outline-offset:1px}
+  button{margin-top:18px;padding:12px 20px;font:inherit;font-weight:650;cursor:pointer;
+    color:var(--paper);background:var(--auth);border:0;border-radius:7px}
+  button:disabled{opacity:.55;cursor:progress}
+  .msg{margin-top:18px;padding:14px 16px;border-radius:8px;font-size:.93rem;display:none}
+  .msg.show{display:block}
+  .err{background:var(--deny-soft);border:1px solid var(--deny);color:var(--deny)}
+  .ok{background:var(--evid-soft);border:1px solid var(--evid);color:var(--ink)}
+  .ident{font:600 1.35rem/1.3 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    letter-spacing:.06em;margin:.5rem 0;color:var(--evid);word-break:break-all}
+  a{color:var(--auth)}
+  details{margin-top:28px;color:var(--ink2);font-size:.9rem}
+  summary{cursor:pointer;font-weight:600;color:var(--ink)}
+  footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--rule);
+    color:var(--ink3);font-size:.85rem}
+</style>
+</head>
+<body>
+<main>
+  <h1>Reader access</h1>
+  <p class="sub"><em>The Contextual Agentic Enterprise: From systems of record to governed AI
+  agents and enterprise outcomes</em></p>
+
+  <p>Everything the book points at — the four appendices, the fourteen full listings and the
+  reference implementation — is already public in
+  <a href="https://github.com/enterprise-digital-brain/edb-companion-public">edb-companion-public</a>
+  and needs nothing from this page.</p>
+
+  <p>This page is for the extended material: the code laboratory, the Terraform definitions and
+  the enterprise template set.</p>
+
+  <form id="register">
+    <fieldset>
+      <legend>Register</legend>
+
+      <label for="order">Order reference</label>
+      <div class="hint">From your order confirmation. An Amazon order ID looks like
+        123-1234567-1234567. Other retailers are fine — paste what you have.</div>
+      <input id="order" name="order" autocomplete="off" spellcheck="false"
+             placeholder="123-1234567-1234567" required>
+
+      <label for="answer">One question from the book</label>
+      <div class="hint" id="question">Loading…</div>
+      <input id="answer" name="answer" autocomplete="off" required>
+
+      <button type="submit" id="go">Get my identifier</button>
+    </fieldset>
+  </form>
+
+  <div class="msg" id="out" role="status" aria-live="polite"></div>
+
+  <details>
+    <summary>I have registered before</summary>
+    <form id="back">
+      <label for="ident">Your identifier</label>
+      <div class="hint">Fifteen characters after EDB-. Case and spacing do not matter.</div>
+      <input id="ident" name="ident" autocomplete="off" spellcheck="false"
+             placeholder="EDB-XXXXX-XXXXX-XXXXX" required>
+      <button type="submit">Send me a fresh link</button>
+    </form>
+  </details>
+
+  <footer>
+    We store your identifier and nothing else — not your order reference, not your email
+    address. Your identifier is derived from your order reference by a one-way function, so it
+    cannot be turned back into it.
+  </footer>
+</main>
+
+<script>
+const API = "https://access.enterprise-digital-brain.workers.dev";
+const out = document.getElementById("out");
+
+function say(kind, html){
+  out.className = "msg show " + kind;
+  out.innerHTML = html;
+  out.scrollIntoView({behavior:"smooth", block:"nearest"});
+}
+
+fetch(API + "/challenge")
+  .then(r => r.json())
+  .then(d => { document.getElementById("question").textContent = d.question; })
+  .catch(() => { document.getElementById("question").textContent =
+    "Could not load the question. Try again in a moment."; });
+
+function granted(d){
+  say("ok",
+    "<div>Your reader identifier</div>" +
+    "<div class='ident'>" + d.identifier + "</div>" +
+    "<p>Keep it. It is how you come back for later revisions without registering again.</p>" +
+    "<p><a href='" + d.download_url + "'>Download the extended material</a><br>" +
+    "<small>This link expires " + new Date(d.expires).toLocaleString() + ".</small></p>");
+}
+
+async function post(path, body, btn){
+  if (btn) btn.disabled = true;
+  try{
+    const r = await fetch(API + path, {
+      method: "POST",
+      headers: {"content-type":"application/json"},
+      body: JSON.stringify(body)
+    });
+    const d = await r.json();
+    if (!r.ok) say("err", d.error || "Something went wrong. Try again in a moment.");
+    else granted(d);
+  } catch {
+    say("err", "Could not reach the server. Check your connection and try again.");
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
+document.getElementById("register").addEventListener("submit", e => {
+  e.preventDefault();
+  post("/register", {
+    order_id: document.getElementById("order").value,
+    answer:   document.getElementById("answer").value
+  }, document.getElementById("go"));
+});
+
+document.getElementById("back").addEventListener("submit", e => {
+  e.preventDefault();
+  post("/return", { identifier: document.getElementById("ident").value },
+       e.target.querySelector("button"));
+});
+</script>
+</body>
+</html>
