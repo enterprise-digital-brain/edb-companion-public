@@ -1,7 +1,7 @@
 # The Contextual Agentic Enterprise — companion repository
 
 Companion material for **The Contextual Agentic Enterprise: From systems of record to
-governed AI agents and enterprise outcomes**, by Hanif Karimi. Published under the
+governed AI agents and enterprise outcomes**Published under the
 Enterprise Digital Brain programme.
 
 This is the one address printed in the book. Everything else is reached from here, so
